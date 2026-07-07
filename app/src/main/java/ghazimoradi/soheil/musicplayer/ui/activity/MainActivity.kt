@@ -1,4 +1,4 @@
-package ghazimoradi.soheil.musicplayer.presentation
+package ghazimoradi.soheil.musicplayer.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

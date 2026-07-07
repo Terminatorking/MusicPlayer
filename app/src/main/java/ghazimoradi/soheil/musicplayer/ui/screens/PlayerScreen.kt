@@ -1,4 +1,4 @@
-package ghazimoradi.soheil.musicplayer.screens
+package ghazimoradi.soheil.musicplayer.ui.screens
 
 import android.content.ContentUris
 import androidx.compose.foundation.background

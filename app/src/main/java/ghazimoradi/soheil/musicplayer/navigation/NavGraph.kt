@@ -10,9 +10,9 @@ import androidx.navigation.navArgument
 import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.navigation.Screens.SongList
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Splash
-import ghazimoradi.soheil.musicplayer.screens.PlayerScreen
-import ghazimoradi.soheil.musicplayer.screens.SongListScreen
-import ghazimoradi.soheil.musicplayer.screens.SplashScreen
+import ghazimoradi.soheil.musicplayer.ui.screens.PlayerScreen
+import ghazimoradi.soheil.musicplayer.ui.screens.SongListScreen
+import ghazimoradi.soheil.musicplayer.ui.screens.SplashScreen
 
 @Composable
 fun SetupNavGraph(
