@@ -1,6 +1,7 @@
 package ghazimoradi.soheil.musicplayer.ui.screens
 
 import android.content.ContentUris
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -55,10 +57,13 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.linc.amplituda.Amplituda
+import com.linc.amplituda.Cache
 import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.ui.components.WaveformBar
 import kotlinx.coroutines.delay
-import kotlin.random.Random
+import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -85,12 +90,31 @@ fun PlayerScreen(
 
     var shuffledList by remember { mutableStateOf(songList) }
 
-    val waveform = remember { getWaveForm() }
+    val amplituda = remember { Amplituda(context) }
+    var waveform by remember { mutableStateOf(IntArray(0)) }
     var waveformProgress by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(currentIndex, isShuffle) {
         val list = if (isShuffle) shuffledList else songList
         val song = list.getOrNull(currentIndex) ?: return@LaunchedEffect
+
+        elapsed = 0L
+        duration = 0L
+        waveformProgress = 0f
+        waveform = IntArray(0)
+
+        amplituda.processAudio(
+            song.data,
+            Cache.withParams(Cache.REUSE)
+        ).get(
+            { result ->
+                val amplitudes = result.amplitudesAsList().map { it.toInt() }.toIntArray()
+                Log.d("PlayerScreen", "Extracted ${amplitudes.size} amplitudes")
+                waveform = amplitudes
+            }, { e ->
+                Log.e("PlayerScreen", "Amplituda error: ${e.message}", e)
+            }
+        )
 
         exoPlayer.apply {
             setMediaItem(MediaItem.fromUri(song.data))
@@ -107,7 +131,7 @@ fun PlayerScreen(
 
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (playbackState == Player.STATE_READY) {
-                    duration = exoPlayer.duration
+                    duration = maxOf(0L, exoPlayer.duration)
                 }
 
                 if (playbackState == Player.STATE_ENDED) {
@@ -237,6 +261,39 @@ fun PlayerScreen(
                     color = Color.White,
                     modifier = Modifier.padding(top = 32.dp)
                 )
+
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(end = 30.dp, start = 30.dp, top = 30.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = formatTime((elapsed / 1000).toInt()),
+                        color = Color.White,
+                        fontSize = 13.sp
+                    )
+
+                    Text(
+                        text = formatTime((duration / 1000).toInt()),
+                        color = Color.White,
+                        fontSize = 13.sp
+                    )
+                }
+
+                WaveformBar(
+                    values = waveform,
+                    process = waveformProgress,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(end = 30.dp, start = 30.dp)
+                ) { percent ->
+                    val seek = (percent * duration).toLong()
+                    exoPlayer.seekTo(seek)
+                    elapsed = seek
+                    waveformProgress = percent
+                }
             }
 
             Row(
@@ -319,9 +376,9 @@ fun PlayerScreen(
     }
 }
 
-fun getWaveForm(): IntArray {
-    val random = Random(System.currentTimeMillis())
-    return IntArray(50) {
-        5 + random.nextInt(50)
-    }
+fun formatTime(seconds: Int): String {
+    val totalSeconds = maxOf(0, seconds)
+    val minutes = totalSeconds / 60
+    val secs = totalSeconds % 60
+    return String.format(Locale.US, "%02d:%02d", minutes, secs)
 }
