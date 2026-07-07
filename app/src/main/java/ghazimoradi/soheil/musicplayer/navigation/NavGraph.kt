@@ -33,7 +33,7 @@ fun SetupNavGraph(
         }
 
         composable(route = SongList.route) {
-            SongListScreen(padding, navController)
+            SongListScreen(padding = padding, navController = navController)
         }
 
         composable(
@@ -54,7 +54,8 @@ fun SetupNavGraph(
 
             PlayerScreen(
                 songList = songs,
-                initialIndex = index
+                initialIndex = index,
+                padding = padding,
             ) {
                 navController.popBackStack()
             }
