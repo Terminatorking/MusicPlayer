@@ -20,7 +20,7 @@ fun WaveformBar(
     modifier: Modifier = Modifier,
     values: IntArray,
     process: Float = 0f,
-    activeBarColor: Color = Color.Red,
+    activeBarColor: Color = Color.White,
     inactiveBarColor: Color = Color.White,
     onSeek: ((Float) -> Unit)? = null
 ) {

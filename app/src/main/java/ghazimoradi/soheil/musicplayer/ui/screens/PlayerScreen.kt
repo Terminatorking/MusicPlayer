@@ -4,7 +4,7 @@ import android.content.ContentUris
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -156,7 +157,7 @@ fun PlayerScreen(
 
     val song = (if (isShuffle) shuffledList else songList).getOrNull(currentIndex)
 
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(
@@ -168,6 +169,9 @@ fun PlayerScreen(
                 )
             )
     ) {
+        val maxHeight = maxHeight
+        val albumArtSize = (maxHeight * 0.4f).coerceIn(200.dp, 320.dp)
+
         song?.let {
             val albumUri = ContentUris.withAppendedId(
                 "content://media/external/audio/albumart".toUri(),
@@ -188,84 +192,93 @@ fun PlayerScreen(
                     .build()
             )
 
-            Row(
-                Modifier.padding(
-                    horizontal = 16.dp,
-                    vertical = padding.calculateTopPadding() + 30.dp
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color(0x30ffffff), shape = CircleShape)
+                // Header
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color(0x30ffffff), shape = CircleShape)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {},
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color(0x30ffffff), shape = CircleShape)
+                    ) {
+                        Icon(
+                            Icons.Default.FavoriteBorder,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
                 }
 
                 Spacer(Modifier.weight(1f))
 
-                IconButton(
-                    onClick = {},
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color(0x30ffffff), shape = CircleShape)
-                ) {
-                    Icon(
-                        Icons.Default.FavoriteBorder,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = padding.calculateTopPadding() + 100.dp)
-            ) {
+                // Album Art
                 AsyncImage(
                     placeholder = painterResource(R.drawable.music_note),
                     error = painterResource(R.drawable.music_note),
                     modifier = Modifier
-                        .size(320.dp)
+                        .size(albumArtSize)
                         .clip(CircleShape)
                         .background(Color(0x30ffffff), shape = CircleShape),
-
                     contentDescription = null,
-                    model = ContentUris.withAppendedId(
-                        "content://media/external/audio/albumart".toUri(),
-                        it.albumId
-                    )
+                    model = albumUri
                 )
 
+                Spacer(Modifier.weight(1f))
+
+                // Song Info
                 Text(
                     it.title.orEmpty(),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp,
+                    fontSize = 22.sp,
                     textAlign = TextAlign.Center,
                     color = Color.White,
-                    modifier = Modifier.padding(top = 32.dp)
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Text(
                     it.artist.orEmpty(),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
                     textAlign = TextAlign.Center,
-                    color = Color.White,
-                    modifier = Modifier.padding(top = 32.dp)
+                    color = Color.White.copy(alpha = 0.7f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = 8.dp)
                 )
 
+                Spacer(Modifier.height(24.dp))
+
+                // Progress Info
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(end = 30.dp, start = 30.dp, top = 30.dp),
+                        .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -287,89 +300,94 @@ fun PlayerScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)
-                        .padding(end = 30.dp, start = 30.dp)
+                        .padding(horizontal = 16.dp)
                 ) { percent ->
                     val seek = (percent * duration).toLong()
                     exoPlayer.seekTo(seek)
                     elapsed = seek
                     waveformProgress = percent
                 }
-            }
 
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = padding.calculateBottomPadding() + 54.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = {
-                        isRepeat = !isRepeat
-                        exoPlayer.repeatMode =
-                            if (isRepeat) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
-                    }
-                ) {
-                    Icon(
-                        Icons.Outlined.RepeatOne,
-                        contentDescription = null,
-                        tint = if (isRepeat) Color(0xff9c27b0) else Color.White
-                    )
-                }
+                Spacer(Modifier.weight(1f))
 
-                IconButton(
-                    onClick = {
-                        val list = if (isShuffle) shuffledList else songList
-                        currentIndex = if (currentIndex - 1 < 0) list.size - 1 else currentIndex - 1
-                    }
+                // Controls
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        Icons.Outlined.SkipPrevious,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
+                    IconButton(
+                        onClick = {
+                            isRepeat = !isRepeat
+                            exoPlayer.repeatMode =
+                                if (isRepeat) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+                        }
+                    ) {
+                        Icon(
+                            Icons.Outlined.RepeatOne,
+                            contentDescription = null,
+                            tint = if (isRepeat) Color(0xff9c27b0) else Color.White
+                        )
+                    }
 
-                IconButton(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .background(Color.White, shape = CircleShape),
-                    onClick = {
-                        if (exoPlayer.isPlaying) exoPlayer.pause() else exoPlayer.play()
+                    IconButton(
+                        onClick = {
+                            val list = if (isShuffle) shuffledList else songList
+                            currentIndex = if (currentIndex - 1 < 0) list.size - 1 else currentIndex - 1
+                        }
+                    ) {
+                        Icon(
+                            Icons.Outlined.SkipPrevious,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
                     }
-                ) {
-                    Icon(
-                        if (isPlaying) Icons.Outlined.Pause else Icons.Filled.PlayArrow,
-                        contentDescription = null,
-                        tint = Color(0xff1a1a1a)
-                    )
-                }
 
-                IconButton(
-                    onClick = {
-                        val list = if (isShuffle) shuffledList else songList
-                        currentIndex = (currentIndex + 1) % list.size
+                    IconButton(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .background(Color.White, shape = CircleShape),
+                        onClick = {
+                            if (exoPlayer.isPlaying) exoPlayer.pause() else exoPlayer.play()
+                        }
+                    ) {
+                        Icon(
+                            if (isPlaying) Icons.Outlined.Pause else Icons.Filled.PlayArrow,
+                            contentDescription = null,
+                            tint = Color(0xff1a1a1a),
+                            modifier = Modifier.size(36.dp)
+                        )
                     }
-                ) {
-                    Icon(
-                        Icons.Outlined.SkipNext,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
 
-                IconButton(
-                    onClick = {
-                        isShuffle = !isShuffle
-                        shuffledList = if (isShuffle) songList.shuffled() else songList
+                    IconButton(
+                        onClick = {
+                            val list = if (isShuffle) shuffledList else songList
+                            currentIndex = (currentIndex + 1) % list.size
+                        }
+                    ) {
+                        Icon(
+                            Icons.Outlined.SkipNext,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
                     }
-                ) {
-                    Icon(
-                        Icons.Outlined.Shuffle,
-                        contentDescription = null,
-                        tint = if (isShuffle) Color(0xff9c27b0) else Color.White
-                    )
+
+                    IconButton(
+                        onClick = {
+                            isShuffle = !isShuffle
+                            shuffledList = if (isShuffle) songList.shuffled() else songList
+                        }
+                    ) {
+                        Icon(
+                            Icons.Outlined.Shuffle,
+                            contentDescription = null,
+                            tint = if (isShuffle) Color(0xff9c27b0) else Color.White
+                        )
+                    }
                 }
             }
         }
