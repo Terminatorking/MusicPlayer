@@ -23,19 +23,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.data.getSongs
+import ghazimoradi.soheil.musicplayer.navigation.Screens
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SongListScreen(
     padding: PaddingValues,
-
-    onSongClick: (songs: List<Song>, position: Int) -> Unit
+    navController: NavController,
 ) {
     val context = LocalContext.current
 
@@ -88,7 +89,8 @@ fun SongListScreen(
             SongList(
                 songs = songsState.value,
                 onSongClick = { pos ->
-                    onSongClick(songsState.value, pos)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("songList", songsState.value)
+                    navController.navigate(Screens.Player.withArgs(pos))
                 },
                 modifier = Modifier.weight(1f)
             )
