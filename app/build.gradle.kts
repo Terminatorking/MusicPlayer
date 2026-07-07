@@ -45,6 +45,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     implementation(libs.accompanist.permissions)
+
+    //Use amplituda for extract music wave
+    implementation(libs.amplituda)
+
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.media3.exoplayer)
