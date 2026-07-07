@@ -25,7 +25,7 @@ import ghazimoradi.soheil.musicplayer.R
 
 @Composable
 fun SplashScreen(
-    navigate: () -> Unit,
+    navigateToSongList: () -> Unit,
     padding: PaddingValues,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -45,7 +45,7 @@ fun SplashScreen(
                 .padding(top = padding.calculateTopPadding() + 30.dp, start = 24.dp, end = 24.dp)
                 .align(Alignment.TopCenter)
                 .height(50.dp),
-            onClick = navigate
+            onClick = navigateToSongList
         ) {
             Text(
                 text = stringResource(R.string.get_started),
