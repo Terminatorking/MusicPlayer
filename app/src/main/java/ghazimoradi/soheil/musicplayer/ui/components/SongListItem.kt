@@ -1,4 +1,4 @@
-package ghazimoradi.soheil.musicplayer.ui.screens
+package ghazimoradi.soheil.musicplayer.ui.components
 
 import android.content.ContentUris
 import androidx.compose.foundation.background
@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,30 +22,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ghazimoradi.soheil.musicplayer.data.Song
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import ghazimoradi.soheil.musicplayer.R
-
-@Composable
-fun SongList(
-    modifier: Modifier = Modifier,
-    songs: List<Song>,
-    onSongClick: (Int) -> Unit,
-) {
-    LazyColumn(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        itemsIndexed(songs) { index, song ->
-            SongListItem(
-                song = song,
-                onClick = {
-                    onSongClick.invoke(index)
-                }
-            )
-        }
-    }
-}
+import ghazimoradi.soheil.musicplayer.data.Song
 
 @Composable
 fun SongListItem(song: Song, onClick: () -> Unit) {

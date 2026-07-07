@@ -31,6 +31,7 @@ import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.data.getSongs
 import ghazimoradi.soheil.musicplayer.navigation.Screens
+import ghazimoradi.soheil.musicplayer.ui.components.SongList
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -89,7 +90,10 @@ fun SongListScreen(
             SongList(
                 songs = songsState.value,
                 onSongClick = { pos ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set("songList", songsState.value)
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "songList",
+                        songsState.value
+                    )
                     navController.navigate(Screens.Player.withArgs(pos))
                 },
                 modifier = Modifier.weight(1f)
