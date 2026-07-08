@@ -25,7 +25,7 @@ fun SetupNavGraph(
         startDestination = Splash.route
     ) {
         composable(route = Splash.route) {
-            SplashScreen(padding = padding) {
+            SplashScreen {
                 navController.navigate(SongList.route) {
                     popUpTo(Splash.route) {
                         inclusive = true
