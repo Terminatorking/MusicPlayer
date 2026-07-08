@@ -2,10 +2,11 @@ package ghazimoradi.soheil.musicplayer.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ghazimoradi.soheil.musicplayer.utils.TABLE_NAME
 
-@Entity
+@Entity(tableName = TABLE_NAME)
 data class Song(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long,
     val title: String?,
     val artist: String?,
