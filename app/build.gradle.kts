@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
     id("kotlin-parcelize")
 }
 
@@ -44,14 +46,27 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    // Permissions
     implementation(libs.accompanist.permissions)
 
-    //Use amplituda for extract music wave
+    //Amplituda (for extract music wave)
     implementation(libs.amplituda)
 
+    //Navigation
     implementation(libs.androidx.navigation.compose)
+
+    //Icon
     implementation(libs.androidx.material.icons.extended)
+
+    //Exoplayer
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+
+    //Image loading
     implementation(libs.coil)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }
