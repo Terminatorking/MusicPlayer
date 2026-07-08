@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.data.model.Song
 
 @Composable
 fun SongList(

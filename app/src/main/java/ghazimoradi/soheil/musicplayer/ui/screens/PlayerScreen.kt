@@ -60,7 +60,7 @@ import coil3.request.ImageRequest
 import com.linc.amplituda.Amplituda
 import com.linc.amplituda.Cache
 import ghazimoradi.soheil.musicplayer.R
-import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.ui.components.WaveformBar
 import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
 import ghazimoradi.soheil.musicplayer.ui.theme.Charade

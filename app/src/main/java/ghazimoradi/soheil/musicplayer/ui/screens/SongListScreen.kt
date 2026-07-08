@@ -33,7 +33,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import ghazimoradi.soheil.musicplayer.R
-import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.ui.components.ProjectOutlinedTextField
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
 import ghazimoradi.soheil.musicplayer.ui.theme.Bayside

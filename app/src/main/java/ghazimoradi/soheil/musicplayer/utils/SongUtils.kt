@@ -3,7 +3,7 @@ package ghazimoradi.soheil.musicplayer.utils
 import android.content.Context
 import android.provider.MediaStore
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.data.model.Song
 import javax.inject.Inject
 
 class SongUtils @Inject constructor(

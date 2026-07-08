@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import ghazimoradi.soheil.musicplayer.R
-import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.ui.theme.SilverCoin
 import ghazimoradi.soheil.musicplayer.ui.theme.White
 import ghazimoradi.soheil.musicplayer.ui.theme.WhiteAlpha20

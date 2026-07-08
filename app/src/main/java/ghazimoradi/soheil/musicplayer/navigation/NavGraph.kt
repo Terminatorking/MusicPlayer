@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.navigation.Screens.SongList
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Splash
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Player

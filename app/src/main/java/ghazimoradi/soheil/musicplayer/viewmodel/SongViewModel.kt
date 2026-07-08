@@ -2,7 +2,7 @@ package ghazimoradi.soheil.musicplayer.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.utils.SongUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
