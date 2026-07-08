@@ -1,4 +1,4 @@
-package ghazimoradi.soheil.musicplayer.ui.screens
+package ghazimoradi.soheil.musicplayer.ui.screens.songlist
 
 import android.Manifest.permission
 import android.os.Build
@@ -6,10 +6,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -26,9 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -37,6 +35,7 @@ import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.ui.components.ProjectOutlinedTextField
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
+import ghazimoradi.soheil.musicplayer.ui.screens.FavoriteScreen
 import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
 import ghazimoradi.soheil.musicplayer.ui.theme.Transparent
 import ghazimoradi.soheil.musicplayer.ui.theme.White
@@ -77,7 +76,11 @@ fun SongListScreen(
         }
     }
 
-    val permissionState = rememberPermissionState(permission)
+    val shouldShowPermissionLay = remember { mutableStateOf(false) }
+
+    val permissionState = rememberPermissionState(permission) {
+        shouldShowPermissionLay.value = !it
+    }
 
     LaunchedEffect(permissionState.status) {
         if (permissionState.status.isGranted) {
@@ -85,6 +88,8 @@ fun SongListScreen(
             allSongs.value = songs
         }
     }
+
+    val shouldShowDialog = remember { mutableStateOf(true) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -95,24 +100,26 @@ fun SongListScreen(
         )
 
         Column(Modifier.fillMaxSize()) {
-            Text(
-                text = "Explorer Artist",
-                fontSize = 20.sp,
-                color = White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(top = padding.calculateTopPadding() + 30.dp, bottom = 16.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-
             if (!permissionState.status.isGranted) {
-                Button(
-                    onClick = { permissionState.launchPermissionRequest() },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                ) {
-                    Text("Grant permission to get songs")
+                if (shouldShowDialog.value) {
+                    ShowPermissionDialog {
+                        shouldShowDialog.value = false
+                        shouldShowPermissionLay.value = true
+                        permissionState.launchPermissionRequest()
+                    }
                 }
+
+                if (shouldShowPermissionLay.value) {
+                    StoragePermissionLay()
+                }
+
             } else {
+                Spacer(
+                    modifier = Modifier
+                        .padding(top = padding.calculateTopPadding(), bottom = 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+
                 SecondaryTabRow(
                     selectedTabIndex = tabIndex,
                     modifier = Modifier.padding(20.dp),

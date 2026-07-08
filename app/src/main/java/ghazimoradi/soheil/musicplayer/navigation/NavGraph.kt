@@ -12,7 +12,7 @@ import ghazimoradi.soheil.musicplayer.navigation.Screens.SongList
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Splash
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Player
 import ghazimoradi.soheil.musicplayer.ui.screens.PlayerScreen
-import ghazimoradi.soheil.musicplayer.ui.screens.SongListScreen
+import ghazimoradi.soheil.musicplayer.ui.screens.songlist.SongListScreen
 import ghazimoradi.soheil.musicplayer.ui.screens.SplashScreen
 
 @Composable
