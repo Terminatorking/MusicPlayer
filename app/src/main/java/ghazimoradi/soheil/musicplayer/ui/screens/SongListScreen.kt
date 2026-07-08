@@ -24,36 +24,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
-import ghazimoradi.soheil.musicplayer.data.getSongs
 import ghazimoradi.soheil.musicplayer.ui.components.ProjectOutlinedTextField
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
 import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
 import ghazimoradi.soheil.musicplayer.ui.theme.Transparent
 import ghazimoradi.soheil.musicplayer.ui.theme.White
+import ghazimoradi.soheil.musicplayer.viewmodel.SongViewModel
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SongListScreen(
     padding: PaddingValues,
-    navigateToPlayer: (songs: List<Song>, position: Int) -> Unit,
+    viewmodel: SongViewModel = hiltViewModel(),
+    navigateToPlayer: (songs: List<Song>, position: Int) -> Unit
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
 
     var search by remember { mutableStateOf("") }
 
     val tabs = listOf("Songs", "Favorites")
-
-    val context = LocalContext.current
 
     val allSongs = remember {
         mutableStateOf<List<Song>>(emptyList())
@@ -73,7 +72,7 @@ fun SongListScreen(
 
     LaunchedEffect(permissionState.status) {
         if (permissionState.status.isGranted) {
-            val songs = getSongs(context)
+            val songs = viewmodel.getSongs()
             allSongs.value = songs
             songsState.value = songs
         }

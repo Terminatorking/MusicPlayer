@@ -1,4 +1,4 @@
-package ghazimoradi.soheil.musicplayer
+package ghazimoradi.soheil.musicplayer.utils
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
