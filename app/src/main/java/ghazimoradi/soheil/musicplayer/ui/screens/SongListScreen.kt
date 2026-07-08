@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -39,11 +37,11 @@ import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.data.getSongs
 import ghazimoradi.soheil.musicplayer.navigation.Screens
+import ghazimoradi.soheil.musicplayer.ui.components.ProjectOutlinedTextField
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
 import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
 import ghazimoradi.soheil.musicplayer.ui.theme.Transparent
 import ghazimoradi.soheil.musicplayer.ui.theme.White
-import ghazimoradi.soheil.musicplayer.ui.theme.SilverCoin
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -142,19 +140,8 @@ fun SongListScreen(
                     }
                 } else {
 
-                    OutlinedTextField(
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedLabelColor = Bayside,
-                            unfocusedLabelColor = SilverCoin,
-                            cursorColor = Bayside,
-                            focusedBorderColor = Bayside,
-                            unfocusedBorderColor = SilverCoin,
-                            focusedTextColor = White
-                        ),
-                        label = {
-                            Text("Search")
-                        },
-                        modifier = Modifier
+                    ProjectOutlinedTextField(
+                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(20.dp),
                         value = search,
