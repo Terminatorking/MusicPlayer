@@ -11,9 +11,9 @@ import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.navigation.Screens.SongList
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Splash
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Player
-import ghazimoradi.soheil.musicplayer.ui.screens.PlayerScreen
+import ghazimoradi.soheil.musicplayer.ui.screens.player.PlayerScreen
 import ghazimoradi.soheil.musicplayer.ui.screens.songlist.SongListScreen
-import ghazimoradi.soheil.musicplayer.ui.screens.SplashScreen
+import ghazimoradi.soheil.musicplayer.ui.screens.splash.SplashScreen
 
 @Composable
 fun SetupNavGraph(

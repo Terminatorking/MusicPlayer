@@ -35,7 +35,7 @@ import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.model.Song
 import ghazimoradi.soheil.musicplayer.ui.components.ProjectOutlinedTextField
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
-import ghazimoradi.soheil.musicplayer.ui.screens.FavoriteScreen
+import ghazimoradi.soheil.musicplayer.ui.screens.favorite.FavoriteScreen
 import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
 import ghazimoradi.soheil.musicplayer.ui.theme.Transparent
 import ghazimoradi.soheil.musicplayer.ui.theme.White

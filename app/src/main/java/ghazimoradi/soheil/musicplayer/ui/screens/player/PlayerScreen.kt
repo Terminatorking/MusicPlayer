@@ -1,4 +1,4 @@
-package ghazimoradi.soheil.musicplayer.ui.screens
+package ghazimoradi.soheil.musicplayer.ui.screens.player
 
 import android.content.ContentUris
 import android.util.Log

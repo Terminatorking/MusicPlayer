@@ -1,4 +1,4 @@
-package ghazimoradi.soheil.musicplayer.ui.screens
+package ghazimoradi.soheil.musicplayer.ui.screens.favorite
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
