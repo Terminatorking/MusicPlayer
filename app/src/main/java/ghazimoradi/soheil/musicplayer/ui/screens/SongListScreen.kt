@@ -1,6 +1,5 @@
 package ghazimoradi.soheil.musicplayer.ui.screens
 
-import androidx.compose.runtime.Composable
 import android.Manifest.permission
 import android.os.Build
 import androidx.compose.foundation.Image
@@ -10,10 +9,16 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +44,10 @@ fun SongListScreen(
     padding: PaddingValues,
     navController: NavController,
 ) {
+    var tabIndex by remember { mutableIntStateOf(0) }
+
+    val tabs = listOf("Songs", "Favorites")
+
     val context = LocalContext.current
 
     val songsState = remember {
@@ -78,26 +87,53 @@ fun SongListScreen(
                     .align(Alignment.CenterHorizontally)
             )
 
-            if (!permissionState.status.isGranted) {
-                Button(
-                    onClick = { permissionState.launchPermissionRequest() },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                ) {
-                    Text("Grant permission to get songs")
-                }
-            }
+            SecondaryTabRow(
+                selectedTabIndex = tabIndex,
+                modifier = Modifier.padding(20.dp),
+                containerColor = Color.Transparent,
+                tabs = {
+                    tabs.forEachIndexed { index, value ->
+                        val isSelected = tabIndex == index
 
-            SongList(
-                songs = songsState.value,
-                onSongClick = { pos ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                        "songList",
-                        songsState.value
-                    )
-                    navController.navigate(Screens.Player.withArgs(pos))
-                },
-                modifier = Modifier.weight(1f)
+                        Tab(
+                            text = {
+                                Text(
+                                    text = value,
+                                    color = if (isSelected) Color(0xffffffff) else Color.White
+                                )
+                            },
+                            selected = isSelected,
+                            onClick = {
+                                tabIndex = index
+                            }
+                        )
+                    }
+                }
             )
+
+            if (tabIndex == 0) {
+                if (!permissionState.status.isGranted) {
+                    Button(
+                        onClick = { permissionState.launchPermissionRequest() },
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    ) {
+                        Text("Grant permission to get songs")
+                    }
+                }
+                SongList(
+                    songs = songsState.value,
+                    onSongClick = { pos ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "songList",
+                            songsState.value
+                        )
+                        navController.navigate(Screens.Player.withArgs(pos))
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                FavoriteScreen()
+            }
         }
     }
 }

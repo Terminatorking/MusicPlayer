@@ -50,7 +50,7 @@ fun SongListItem(song: Song, onClick: () -> Unit) {
             modifier = Modifier
                 .size(56.dp)
                 .clip(CircleShape)
-                .background(Color(0x33000000)),
+                .background(Color(0x33ffffff)),
             contentScale = ContentScale.Crop,
             error = painterResource(R.drawable.music_note),
             placeholder = painterResource(R.drawable.music_note)
