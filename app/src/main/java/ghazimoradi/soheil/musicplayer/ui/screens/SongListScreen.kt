@@ -105,45 +105,48 @@ fun SongListScreen(
                     .align(Alignment.CenterHorizontally)
             )
 
-            SecondaryTabRow(
-                selectedTabIndex = tabIndex,
-                modifier = Modifier.padding(20.dp),
-                containerColor = Transparent,
-                indicator = {
-                    TabRowDefaults.SecondaryIndicator(
-                        color = Bayside,
-                        modifier = Modifier.tabIndicatorOffset(tabIndex, matchContentSize = false)
-                    )
-                },
-                tabs = {
-                    tabs.forEachIndexed { index, value ->
-                        val isSelected = tabIndex == index
-
-                        Tab(
-                            text = {
-                                Text(
-                                    text = value,
-                                    color = if (isSelected) Bayside else White
-                                )
-                            },
-                            selected = isSelected,
-                            onClick = {
-                                tabIndex = index
-                            }
-                        )
-                    }
+            if (!permissionState.status.isGranted) {
+                Button(
+                    onClick = { permissionState.launchPermissionRequest() },
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                ) {
+                    Text("Grant permission to get songs")
                 }
-            )
+            } else {
+                SecondaryTabRow(
+                    selectedTabIndex = tabIndex,
+                    modifier = Modifier.padding(20.dp),
+                    containerColor = Transparent,
+                    indicator = {
+                        TabRowDefaults.SecondaryIndicator(
+                            color = Bayside,
+                            modifier = Modifier.tabIndicatorOffset(
+                                tabIndex,
+                                matchContentSize = false
+                            )
+                        )
+                    },
+                    tabs = {
+                        tabs.forEachIndexed { index, value ->
+                            val isSelected = tabIndex == index
 
-            if (tabIndex == 0) {
-                if (!permissionState.status.isGranted) {
-                    Button(
-                        onClick = { permissionState.launchPermissionRequest() },
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                    ) {
-                        Text("Grant permission to get songs")
+                            Tab(
+                                text = {
+                                    Text(
+                                        text = value,
+                                        color = if (isSelected) Bayside else White
+                                    )
+                                },
+                                selected = isSelected,
+                                onClick = {
+                                    tabIndex = index
+                                }
+                            )
+                        }
                     }
-                } else {
+                )
+
+                if (tabIndex == 0) {
 
                     ProjectOutlinedTextField(
                         modifier = Modifier
@@ -164,9 +167,10 @@ fun SongListScreen(
                             .weight(1f)
                             .padding(start = 20.dp)
                     )
+
+                } else {
+                    FavoriteScreen(navigateToPlayer = navigateToPlayer)
                 }
-            } else {
-                FavoriteScreen(navigateToPlayer = navigateToPlayer)
             }
         }
     }
