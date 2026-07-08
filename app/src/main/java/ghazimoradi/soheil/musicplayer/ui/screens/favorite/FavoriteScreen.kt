@@ -26,7 +26,6 @@ import ghazimoradi.soheil.musicplayer.ui.components.ProjectOutlinedTextField
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
 import ghazimoradi.soheil.musicplayer.ui.theme.White
 import ghazimoradi.soheil.musicplayer.viewmodel.FavoriteViewModel
-import kotlin.text.isEmpty
 
 @Composable
 fun FavoriteScreen(
