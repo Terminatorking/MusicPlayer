@@ -25,8 +25,8 @@ import ghazimoradi.soheil.musicplayer.ui.theme.White
 
 @Composable
 fun SplashScreen(
-    navigateToSongList: () -> Unit,
     padding: PaddingValues,
+    navigateToSongList: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -49,7 +49,7 @@ fun SplashScreen(
         ) {
             Text(
                 text = stringResource(R.string.get_started),
-                fontSize = 20.sp,
+                fontSize = 14.sp,
                 color = White,
                 fontWeight = FontWeight.Bold
             )

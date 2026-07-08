@@ -29,14 +29,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.data.getSongs
-import ghazimoradi.soheil.musicplayer.navigation.Screens
 import ghazimoradi.soheil.musicplayer.ui.components.ProjectOutlinedTextField
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
 import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
@@ -47,7 +45,7 @@ import ghazimoradi.soheil.musicplayer.ui.theme.White
 @Composable
 fun SongListScreen(
     padding: PaddingValues,
-    navController: NavController,
+    navigateToPlayer: (songs: List<Song>, position: Int) -> Unit,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
 
@@ -141,7 +139,7 @@ fun SongListScreen(
                 } else {
 
                     ProjectOutlinedTextField(
-                         modifier = Modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(20.dp),
                         value = search,
@@ -160,11 +158,7 @@ fun SongListScreen(
                     SongList(
                         songs = songsState.value,
                         onSongClick = { pos ->
-                            navController.currentBackStackEntry?.savedStateHandle?.set(
-                                "songList",
-                                songsState.value
-                            )
-                            navController.navigate(Screens.Player.withArgs(pos))
+                            navigateToPlayer.invoke(songsState.value, pos)
                         },
                         modifier = Modifier
                             .weight(1f)

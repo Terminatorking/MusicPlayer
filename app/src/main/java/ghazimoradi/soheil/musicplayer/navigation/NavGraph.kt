@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.navigation.Screens.SongList
 import ghazimoradi.soheil.musicplayer.navigation.Screens.Splash
+import ghazimoradi.soheil.musicplayer.navigation.Screens.Player
 import ghazimoradi.soheil.musicplayer.ui.screens.PlayerScreen
 import ghazimoradi.soheil.musicplayer.ui.screens.SongListScreen
 import ghazimoradi.soheil.musicplayer.ui.screens.SplashScreen
@@ -24,20 +25,29 @@ fun SetupNavGraph(
         startDestination = Splash.route
     ) {
         composable(route = Splash.route) {
-            SplashScreen(
-                navigateToSongList = {
-                    navController.navigate(SongList.route)
-                },
-                padding = padding,
-            )
+            SplashScreen(padding = padding) {
+                navController.navigate(SongList.route) {
+                    popUpTo(Splash.route) {
+                        inclusive = true
+                    }
+                }
+            }
         }
 
         composable(route = SongList.route) {
-            SongListScreen(padding = padding, navController = navController)
+            SongListScreen(padding = padding) { songs, position ->
+                navController.apply {
+                    currentBackStackEntry?.savedStateHandle?.set(
+                        "songList",
+                        songs
+                    )
+                    navigate(Player.withArgs(position))
+                }
+            }
         }
 
         composable(
-            route = Screens.Player.route + "/{index}",
+            route = Player.route + "/{index}",
             arguments = listOf(
                 navArgument("index") {
                     type = NavType.IntType
