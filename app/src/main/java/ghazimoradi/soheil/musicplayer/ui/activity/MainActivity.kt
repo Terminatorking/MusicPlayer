@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ghazimoradi.soheil.musicplayer.navigation.SetupNavGraph
-import ghazimoradi.soheil.musicplayer.ui.theme.MusicPlayerTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -21,10 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             navController = rememberNavController()
-            MusicPlayerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    SetupNavGraph(navController, innerPadding)
-                }
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                SetupNavGraph(navController, innerPadding)
             }
         }
     }
