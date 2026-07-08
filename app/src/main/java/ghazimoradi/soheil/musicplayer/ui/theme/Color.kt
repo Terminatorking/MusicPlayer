@@ -10,3 +10,4 @@ val Charade = Color(0xff2c2c38)
 val Bayside = Color(0xff24ADF3)
 val EerieBlack = Color(0xff1a1a1a)
 val Transparent = Color.Transparent
+val Orange = Color(0xffff8000)

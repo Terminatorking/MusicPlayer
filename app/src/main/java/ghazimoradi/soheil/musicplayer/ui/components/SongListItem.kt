@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +25,9 @@ import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
+import ghazimoradi.soheil.musicplayer.ui.theme.SilverCoin
+import ghazimoradi.soheil.musicplayer.ui.theme.White
+import ghazimoradi.soheil.musicplayer.ui.theme.WhiteAlpha20
 
 @Composable
 fun SongListItem(song: Song, onClick: () -> Unit) {
@@ -50,7 +52,7 @@ fun SongListItem(song: Song, onClick: () -> Unit) {
             modifier = Modifier
                 .size(56.dp)
                 .clip(CircleShape)
-                .background(Color(0x33ffffff)),
+                .background(WhiteAlpha20),
             contentScale = ContentScale.Crop,
             error = painterResource(R.drawable.music_note),
             placeholder = painterResource(R.drawable.music_note)
@@ -61,7 +63,7 @@ fun SongListItem(song: Song, onClick: () -> Unit) {
         ) {
             Text(
                 text = song.title.orEmpty(),
-                color = Color.White,
+                color = White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 maxLines = 1,
@@ -70,7 +72,7 @@ fun SongListItem(song: Song, onClick: () -> Unit) {
 
             Text(
                 text = song.artist.orEmpty(),
-                color = Color(0xffbbbbbb),
+                color = SilverCoin,
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

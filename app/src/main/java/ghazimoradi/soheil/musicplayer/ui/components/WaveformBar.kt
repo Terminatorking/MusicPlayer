@@ -14,14 +14,15 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import ghazimoradi.soheil.musicplayer.ui.theme.White
 
 @Composable
 fun WaveformBar(
     modifier: Modifier = Modifier,
     values: IntArray,
     process: Float = 0f,
-    activeBarColor: Color = Color.White,
-    inactiveBarColor: Color = Color.White,
+    activeBarColor: Color = White,
+    inactiveBarColor: Color = White,
     onSeek: ((Float) -> Unit)? = null
 ) {
     val inactiveColor = inactiveBarColor.copy(alpha = 0.2f)

@@ -43,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -63,6 +62,12 @@ import com.linc.amplituda.Cache
 import ghazimoradi.soheil.musicplayer.R
 import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.ui.components.WaveformBar
+import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
+import ghazimoradi.soheil.musicplayer.ui.theme.Charade
+import ghazimoradi.soheil.musicplayer.ui.theme.EerieBlack
+import ghazimoradi.soheil.musicplayer.ui.theme.FrostBlack
+import ghazimoradi.soheil.musicplayer.ui.theme.White
+import ghazimoradi.soheil.musicplayer.ui.theme.WhiteAlpha20
 import kotlinx.coroutines.delay
 import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
@@ -163,8 +168,8 @@ fun PlayerScreen(
             .background(
                 Brush.verticalGradient(
                     listOf(
-                        Color(0xff191c1f),
-                        Color(0xff2c2c38),
+                        FrostBlack,
+                        Charade,
                     )
                 )
             )
@@ -211,12 +216,12 @@ fun PlayerScreen(
                         onClick = onBack,
                         modifier = Modifier
                             .size(48.dp)
-                            .background(Color(0x30ffffff), shape = CircleShape)
+                            .background(WhiteAlpha20, shape = CircleShape)
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = White
                         )
                     }
 
@@ -224,12 +229,12 @@ fun PlayerScreen(
                         onClick = {},
                         modifier = Modifier
                             .size(48.dp)
-                            .background(Color(0x30ffffff), shape = CircleShape)
+                            .background(WhiteAlpha20, shape = CircleShape)
                     ) {
                         Icon(
                             Icons.Default.FavoriteBorder,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = White
                         )
                     }
                 }
@@ -243,7 +248,7 @@ fun PlayerScreen(
                     modifier = Modifier
                         .size(albumArtSize)
                         .clip(CircleShape)
-                        .background(Color(0x30ffffff), shape = CircleShape),
+                        .background(WhiteAlpha20, shape = CircleShape),
                     contentDescription = null,
                     model = albumUri
                 )
@@ -256,7 +261,7 @@ fun PlayerScreen(
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center,
-                    color = Color.White,
+                    color = White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -266,7 +271,7 @@ fun PlayerScreen(
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
-                    color = Color.White.copy(alpha = 0.7f),
+                    color = White.copy(alpha = 0.7f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 8.dp)
@@ -283,13 +288,13 @@ fun PlayerScreen(
                 ) {
                     Text(
                         text = formatTime((elapsed / 1000).toInt()),
-                        color = Color.White,
+                        color = White,
                         fontSize = 13.sp
                     )
 
                     Text(
                         text = formatTime((duration / 1000).toInt()),
-                        color = Color.White,
+                        color = White,
                         fontSize = 13.sp
                     )
                 }
@@ -328,20 +333,21 @@ fun PlayerScreen(
                         Icon(
                             Icons.Outlined.RepeatOne,
                             contentDescription = null,
-                            tint = if (isRepeat) Color(0xff9c27b0) else Color.White
+                            tint = if (isRepeat) Bayside else White
                         )
                     }
 
                     IconButton(
                         onClick = {
                             val list = if (isShuffle) shuffledList else songList
-                            currentIndex = if (currentIndex - 1 < 0) list.size - 1 else currentIndex - 1
+                            currentIndex =
+                                if (currentIndex - 1 < 0) list.size - 1 else currentIndex - 1
                         }
                     ) {
                         Icon(
                             Icons.Outlined.SkipPrevious,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = White,
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -349,7 +355,7 @@ fun PlayerScreen(
                     IconButton(
                         modifier = Modifier
                             .size(64.dp)
-                            .background(Color.White, shape = CircleShape),
+                            .background(White, shape = CircleShape),
                         onClick = {
                             if (exoPlayer.isPlaying) exoPlayer.pause() else exoPlayer.play()
                         }
@@ -357,7 +363,7 @@ fun PlayerScreen(
                         Icon(
                             if (isPlaying) Icons.Outlined.Pause else Icons.Filled.PlayArrow,
                             contentDescription = null,
-                            tint = Color(0xff1a1a1a),
+                            tint = EerieBlack,
                             modifier = Modifier.size(36.dp)
                         )
                     }
@@ -371,7 +377,7 @@ fun PlayerScreen(
                         Icon(
                             Icons.Outlined.SkipNext,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = White,
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -385,7 +391,7 @@ fun PlayerScreen(
                         Icon(
                             Icons.Outlined.Shuffle,
                             contentDescription = null,
-                            tint = if (isShuffle) Color(0xff9c27b0) else Color.White
+                            tint = if (isShuffle) Bayside else White
                         )
                     }
                 }

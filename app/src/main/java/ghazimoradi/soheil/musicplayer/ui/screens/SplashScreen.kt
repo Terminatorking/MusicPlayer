@@ -13,15 +13,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ghazimoradi.soheil.musicplayer.R
+import ghazimoradi.soheil.musicplayer.ui.theme.Orange
+import ghazimoradi.soheil.musicplayer.ui.theme.White
 
 @Composable
 fun SplashScreen(
@@ -38,7 +38,7 @@ fun SplashScreen(
 
         Button(
             colors = buttonColors(
-                containerColor = colorResource(R.color.orange),
+                containerColor = Orange,
             ),
             shape = RoundedCornerShape(25.dp),
             modifier = Modifier
@@ -50,7 +50,7 @@ fun SplashScreen(
             Text(
                 text = stringResource(R.string.get_started),
                 fontSize = 20.sp,
-                color = Color.White,
+                color = White,
                 fontWeight = FontWeight.Bold
             )
         }

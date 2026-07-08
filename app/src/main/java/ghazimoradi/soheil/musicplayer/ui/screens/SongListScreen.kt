@@ -7,10 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -37,6 +40,10 @@ import ghazimoradi.soheil.musicplayer.data.Song
 import ghazimoradi.soheil.musicplayer.data.getSongs
 import ghazimoradi.soheil.musicplayer.navigation.Screens
 import ghazimoradi.soheil.musicplayer.ui.components.SongList
+import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
+import ghazimoradi.soheil.musicplayer.ui.theme.Transparent
+import ghazimoradi.soheil.musicplayer.ui.theme.White
+import ghazimoradi.soheil.musicplayer.ui.theme.SilverCoin
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -46,9 +53,15 @@ fun SongListScreen(
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
 
+    var search by remember { mutableStateOf("") }
+
     val tabs = listOf("Songs", "Favorites")
 
     val context = LocalContext.current
+
+    val allSongs = remember {
+        mutableStateOf<List<Song>>(emptyList())
+    }
 
     val songsState = remember {
         mutableStateOf<List<Song>>(emptyList())
@@ -64,7 +77,9 @@ fun SongListScreen(
 
     LaunchedEffect(permissionState.status) {
         if (permissionState.status.isGranted) {
-            songsState.value = getSongs(context)
+            val songs = getSongs(context)
+            allSongs.value = songs
+            songsState.value = songs
         }
     }
 
@@ -80,7 +95,7 @@ fun SongListScreen(
             Text(
                 text = "Explorer Artist",
                 fontSize = 20.sp,
-                color = Color.White,
+                color = White,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(top = padding.calculateTopPadding() + 30.dp, bottom = 16.dp)
@@ -90,7 +105,13 @@ fun SongListScreen(
             SecondaryTabRow(
                 selectedTabIndex = tabIndex,
                 modifier = Modifier.padding(20.dp),
-                containerColor = Color.Transparent,
+                containerColor = Transparent,
+                indicator = {
+                    TabRowDefaults.SecondaryIndicator(
+                        color = Bayside,
+                        modifier = Modifier.tabIndicatorOffset(tabIndex, matchContentSize = false)
+                    )
+                },
                 tabs = {
                     tabs.forEachIndexed { index, value ->
                         val isSelected = tabIndex == index
@@ -99,7 +120,7 @@ fun SongListScreen(
                             text = {
                                 Text(
                                     text = value,
-                                    color = if (isSelected) Color(0xffffffff) else Color.White
+                                    color = if (isSelected) Bayside else White
                                 )
                             },
                             selected = isSelected,
@@ -119,18 +140,50 @@ fun SongListScreen(
                     ) {
                         Text("Grant permission to get songs")
                     }
+                } else {
+
+                    OutlinedTextField(
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedLabelColor = Bayside,
+                            unfocusedLabelColor = SilverCoin,
+                            cursorColor = Bayside,
+                            focusedBorderColor = Bayside,
+                            unfocusedBorderColor = SilverCoin,
+                            focusedTextColor = White
+                        ),
+                        label = {
+                            Text("Search")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        value = search,
+                        onValueChange = {
+                            search = it
+                            songsState.value = if (it.isEmpty()) {
+                                allSongs.value
+                            } else {
+                                allSongs.value.filter { song ->
+                                    song.title?.contains(it, ignoreCase = true) == true
+                                }
+                            }
+                        }
+                    )
+
+                    SongList(
+                        songs = songsState.value,
+                        onSongClick = { pos ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "songList",
+                                songsState.value
+                            )
+                            navController.navigate(Screens.Player.withArgs(pos))
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 20.dp)
+                    )
                 }
-                SongList(
-                    songs = songsState.value,
-                    onSongClick = { pos ->
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            "songList",
-                            songsState.value
-                        )
-                        navController.navigate(Screens.Player.withArgs(pos))
-                    },
-                    modifier = Modifier.weight(1f)
-                )
             } else {
                 FavoriteScreen()
             }
