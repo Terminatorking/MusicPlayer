@@ -16,7 +16,10 @@ fun SongList(
     LazyColumn(
         modifier = modifier.fillMaxWidth()
     ) {
-        itemsIndexed(songs) { index, song ->
+        itemsIndexed(
+            items = songs,
+            key = { _, song -> song.id }
+        ) { index, song ->
             SongListItem(
                 song = song,
                 onClick = {

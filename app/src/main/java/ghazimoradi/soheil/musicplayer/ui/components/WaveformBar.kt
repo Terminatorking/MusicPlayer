@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -25,7 +26,23 @@ fun WaveformBar(
     inactiveBarColor: Color = White,
     onSeek: ((Float) -> Unit)? = null
 ) {
-    val inactiveColor = inactiveBarColor.copy(alpha = 0.2f)
+    val inactiveColor = remember(inactiveBarColor) { inactiveBarColor.copy(alpha = 0.2f) }
+
+    val sampledValues = remember(values) {
+        val maxBars = 60
+        if (values.isEmpty()) {
+            IntArray(0)
+        } else if (values.size > maxBars) {
+            val step = values.size / maxBars
+            IntArray(maxBars) { i -> values[i * step] }
+        } else {
+            values
+        }
+    }
+
+    val maxValue = remember(sampledValues) {
+        sampledValues.maxOrNull()?.toFloat() ?: 1f
+    }
 
     Box(
         modifier = modifier
@@ -38,36 +55,24 @@ fun WaveformBar(
             .height(60.dp)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            if (values.isEmpty()) return@Canvas
+            if (sampledValues.isEmpty()) return@Canvas
 
             val canvasWidth = size.width
             val canvasHeight = size.height
-            
-            // Limit the number of bars to draw for performance and visibility
-            val maxBars = 60
-            val sampledValues = if (values.size > maxBars) {
-                val step = values.size / maxBars
-                IntArray(maxBars) { i -> values[i * step] }
-            } else {
-                values
-            }
 
             val barCount = sampledValues.size
             val spacing = 3.dp.toPx()
             val totalSpacing = spacing * (barCount - 1)
             val barWidth = (canvasWidth - totalSpacing) / barCount
-            
-            val maxValue = sampledValues.maxOrNull()?.toFloat() ?: 1f
 
             sampledValues.forEachIndexed { index, value ->
                 val x = index * (barWidth + spacing)
-                
-                // Calculate height: ensure a minimum visible height
+
                 val normalizedHeight = (value.toFloat() / maxValue).coerceAtLeast(0.1f)
                 val barHeight = normalizedHeight * canvasHeight
-                
+
                 val color = if (index.toFloat() / barCount < process) activeBarColor else inactiveColor
-                
+
                 drawRoundRect(
                     color = color,
                     topLeft = Offset(x, (canvasHeight - barHeight) / 2),

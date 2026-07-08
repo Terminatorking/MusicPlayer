@@ -177,26 +177,36 @@ fun PlayerScreen(
         }
     }
 
+    val backgroundBrush = remember {
+        Brush.verticalGradient(
+            listOf(
+                FrostBlack,
+                Charade,
+            )
+        )
+    }
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        FrostBlack,
-                        Charade,
-                    )
-                )
-            )
+            .background(backgroundBrush)
     ) {
         val maxHeight = maxHeight
         val albumArtSize = (maxHeight * 0.4f).coerceIn(200.dp, 320.dp)
 
         song?.let {
-            val albumUri = ContentUris.withAppendedId(
-                "content://media/external/audio/albumart".toUri(),
-                it.albumId
-            )
+            val albumUri = remember(it.albumId) {
+                ContentUris.withAppendedId(
+                    "content://media/external/audio/albumart".toUri(),
+                    it.albumId
+                )
+            }
+
+            val blurImageRequest = remember(albumUri) {
+                ImageRequest.Builder(context)
+                    .data(albumUri)
+                    .build()
+            }
 
             AsyncImage(
                 error = painterResource(R.drawable.music_note),
@@ -207,9 +217,7 @@ fun PlayerScreen(
                     .fillMaxSize()
                     .blur(18.dp),
                 contentDescription = null,
-                model = ImageRequest.Builder(context)
-                    .data(albumUri)
-                    .build()
+                model = blurImageRequest
             )
 
             Column(
@@ -301,38 +309,18 @@ fun PlayerScreen(
                 Spacer(Modifier.height(24.dp))
 
                 // Progress Info
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = formatTime((elapsed / 1000).toInt()),
-                        color = White,
-                        fontSize = 13.sp
-                    )
-
-                    Text(
-                        text = formatTime((duration / 1000).toInt()),
-                        color = White,
-                        fontSize = 13.sp
-                    )
-                }
-
-                WaveformBar(
-                    values = waveform,
-                    process = waveformProgress,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .padding(horizontal = 16.dp)
-                ) { percent ->
-                    val seek = (percent * duration).toLong()
-                    exoPlayer.seekTo(seek)
-                    elapsed = seek
-                    waveformProgress = percent
-                }
+                PlaybackProgress(
+                    elapsed = elapsed,
+                    duration = duration,
+                    waveform = waveform,
+                    waveformProgress = waveformProgress,
+                    onSeek = { percent ->
+                        val seek = (percent * duration).toLong()
+                        exoPlayer.seekTo(seek)
+                        elapsed = seek
+                        waveformProgress = percent
+                    }
+                )
 
                 Spacer(Modifier.weight(1f))
 
@@ -426,4 +414,42 @@ fun formatTime(seconds: Int): String {
     val minutes = totalSeconds / 60
     val secs = totalSeconds % 60
     return String.format(Locale.US, "%02d:%02d", minutes, secs)
+}
+
+@Composable
+fun PlaybackProgress(
+    elapsed: Long,
+    duration: Long,
+    waveform: IntArray,
+    waveformProgress: Float,
+    onSeek: (Float) -> Unit
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = formatTime((elapsed / 1000).toInt()),
+            color = White,
+            fontSize = 13.sp
+        )
+
+        Text(
+            text = formatTime((duration / 1000).toInt()),
+            color = White,
+            fontSize = 13.sp
+        )
+    }
+
+    WaveformBar(
+        values = waveform,
+        process = waveformProgress,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .padding(horizontal = 16.dp),
+        onSeek = onSeek
+    )
 }

@@ -16,6 +16,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,14 +59,22 @@ fun SongListScreen(
         mutableStateOf<List<Song>>(emptyList())
     }
 
-    val songsState = remember {
-        mutableStateOf<List<Song>>(emptyList())
+    val songsState by remember {
+        derivedStateOf {
+            if (search.isEmpty()) {
+                allSongs.value
+            } else {
+                allSongs.value.filter { it.title?.contains(search, ignoreCase = true) == true }
+            }
+        }
     }
 
-    val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        permission.READ_MEDIA_AUDIO
-    } else {
-        permission.READ_EXTERNAL_STORAGE
+    val permission = remember {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permission.READ_MEDIA_AUDIO
+        } else {
+            permission.READ_EXTERNAL_STORAGE
+        }
     }
 
     val permissionState = rememberPermissionState(permission)
@@ -74,7 +83,6 @@ fun SongListScreen(
         if (permissionState.status.isGranted) {
             val songs = viewmodel.getSongs()
             allSongs.value = songs
-            songsState.value = songs
         }
     }
 
@@ -144,20 +152,13 @@ fun SongListScreen(
                         value = search,
                         onValueChange = {
                             search = it
-                            songsState.value = if (it.isEmpty()) {
-                                allSongs.value
-                            } else {
-                                allSongs.value.filter { song ->
-                                    song.title?.contains(it, ignoreCase = true) == true
-                                }
-                            }
                         }
                     )
 
                     SongList(
-                        songs = songsState.value,
+                        songs = songsState,
                         onSongClick = { pos ->
-                            navigateToPlayer.invoke(songsState.value, pos)
+                            navigateToPlayer.invoke(songsState, pos)
                         },
                         modifier = Modifier
                             .weight(1f)
