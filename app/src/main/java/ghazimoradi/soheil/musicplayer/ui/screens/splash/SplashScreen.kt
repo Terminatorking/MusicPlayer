@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ghazimoradi.soheil.musicplayer.R
+import ghazimoradi.soheil.musicplayer.ui.theme.Black
+import ghazimoradi.soheil.musicplayer.ui.theme.White
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -72,8 +73,8 @@ fun SplashScreen(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            Color.Black.copy(alpha = 0.2f),
-                            Color.Black.copy(alpha = 0.8f)
+                            Black.copy(alpha = 0.2f),
+                            Black.copy(alpha = 0.8f)
                         )
                     )
                 )
@@ -89,7 +90,7 @@ fun SplashScreen(
                 imageVector = Icons.Default.MusicNote,
                 contentDescription = null,
                 modifier = Modifier.size(120.dp),
-                tint = Color.White
+                tint = White
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -97,7 +98,7 @@ fun SplashScreen(
             Text(
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.displayMedium.copy(
-                    color = Color.White,
+                    color = White,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 4.sp
                 )
@@ -106,7 +107,7 @@ fun SplashScreen(
             Text(
                 text = "Feel the Rhythm",
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    color = Color.White.copy(alpha = 0.7f),
+                    color = White.copy(alpha = 0.7f),
                     letterSpacing = 2.sp
                 )
             )
