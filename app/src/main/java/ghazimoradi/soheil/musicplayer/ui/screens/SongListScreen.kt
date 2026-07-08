@@ -165,7 +165,7 @@ fun SongListScreen(
                     )
                 }
             } else {
-                FavoriteScreen()
+                FavoriteScreen(navigateToPlayer = navigateToPlayer)
             }
         }
     }

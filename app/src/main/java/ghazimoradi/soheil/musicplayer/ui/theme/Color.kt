@@ -11,3 +11,4 @@ val Bayside = Color(0xff24ADF3)
 val EerieBlack = Color(0xff1a1a1a)
 val Transparent = Color.Transparent
 val Orange = Color(0xffff8000)
+val Vermillion = Color(0xffE33F31)

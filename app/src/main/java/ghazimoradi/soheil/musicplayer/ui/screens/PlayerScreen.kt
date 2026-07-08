@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Pause
@@ -52,6 +53,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -66,14 +68,17 @@ import ghazimoradi.soheil.musicplayer.ui.theme.Bayside
 import ghazimoradi.soheil.musicplayer.ui.theme.Charade
 import ghazimoradi.soheil.musicplayer.ui.theme.EerieBlack
 import ghazimoradi.soheil.musicplayer.ui.theme.FrostBlack
+import ghazimoradi.soheil.musicplayer.ui.theme.Vermillion
 import ghazimoradi.soheil.musicplayer.ui.theme.White
 import ghazimoradi.soheil.musicplayer.ui.theme.WhiteAlpha20
+import ghazimoradi.soheil.musicplayer.viewmodel.FavoriteViewModel
 import kotlinx.coroutines.delay
 import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun PlayerScreen(
+    favoriteViewModel: FavoriteViewModel = hiltViewModel(),
     songList: List<Song>,
     initialIndex: Int = 0,
     padding: PaddingValues,
@@ -90,6 +95,8 @@ fun PlayerScreen(
     var isShuffle by rememberSaveable { mutableStateOf(false) }
     var isRepeat by rememberSaveable { mutableStateOf(false) }
     var isPlaying by remember { mutableStateOf(false) }
+
+    var isFavorite by remember { mutableStateOf(false) }
 
     var elapsed by remember { mutableLongStateOf(0L) }
     var duration by remember { mutableLongStateOf(0L) }
@@ -162,6 +169,14 @@ fun PlayerScreen(
 
     val song = (if (isShuffle) shuffledList else songList).getOrNull(currentIndex)
 
+    LaunchedEffect(Unit) {
+        song?.let { song ->
+            favoriteViewModel.isExists(song.id).collect {
+                isFavorite = it
+            }
+        }
+    }
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -226,15 +241,21 @@ fun PlayerScreen(
                     }
 
                     IconButton(
-                        onClick = {},
+                        onClick = {
+                            if (isFavorite) {
+                                favoriteViewModel.delete(it)
+                            } else {
+                                favoriteViewModel.save(it)
+                            }
+                        },
                         modifier = Modifier
                             .size(48.dp)
                             .background(WhiteAlpha20, shape = CircleShape)
                     ) {
                         Icon(
-                            Icons.Default.FavoriteBorder,
+                            if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
-                            tint = White
+                            tint = if (isFavorite) Vermillion else White
                         )
                     }
                 }
