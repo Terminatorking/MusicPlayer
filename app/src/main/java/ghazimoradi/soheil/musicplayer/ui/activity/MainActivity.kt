@@ -1,7 +1,9 @@
 package ghazimoradi.soheil.musicplayer.ui.activity
 
+import android.graphics.Color.TRANSPARENT
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle.Companion.dark
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +21,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = dark(TRANSPARENT),
+            navigationBarStyle = dark(TRANSPARENT)
+        )
         setContent {
             navController = rememberNavController()
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
